@@ -1,15 +1,59 @@
-import React from "react";
-import rigoImage from "../../img/rigo-baby.jpg";
+import React, { useContext, useEffect, useState } from "react";
 import "../../styles/home.css";
+import { Context } from "../store/appContext";
+import { useHistory } from "react-router-dom";
 
-export const Home = () => (
-	<div className="text-center mt-5">
-		<h1>Hello Rigo!</h1>
-		<p>
-			<img src={rigoImage} />
-		</p>
-		<a href="#" className="btn btn-success">
-			If you see this green button, bootstrap is working
-		</a>
-	</div>
-);
+export const Home = () => {
+	const {store, actions} = useContext(Context);
+	const history = useHistory()
+
+  return (
+    <>
+      <h1>Characters</h1>
+      <div className="card-group">
+		{store.characters.map((character) => {
+			return(
+			        <div className="card" key={character.uid}>
+					<img src={store.baseImgURL + 'characters/' + character.uid + '.jpg'} className="card-img-top" alt="..." />
+					<div className="card-body">
+					  <h5 className="card-title">{character.name}</h5>
+					</div>
+					<div className="d-flex justify-content-between">
+						<button className="btn btn-primary" onClick={() => {
+							actions.getSingle(character.url)
+							history.push('/single')
+						}}>Learn More</button>
+						<button className="btn btn-warning" onClick={() => {
+							actions.addFavorite(character)
+						}}><i className="far fa-heart"></i></button>
+					</div>
+				  </div>
+			)
+		})}
+      </div>
+	  <h1>Planets</h1>
+      <div className="card-group">
+		{store.planets.map((planet) => {
+			return(
+			        <div className="card" key={planet.uid}>
+					<img src={store.baseImgURL + 'planets/' + planet.uid + '.jpg'} className="card-img-top" alt="..." />
+					<div className="card-body">
+					  <h5 className="card-title">{planet.name}</h5>
+					</div>
+					<div className="d-flex justify-content-between">
+						<button className="btn btn-primary" onClick={() => {
+							actions.getSingle(planet.url)
+							history.push('/single')
+						}}>Learn More</button>
+						<button className="btn btn-warning" onClick={() => {
+							actions.addFavorite(planet)
+						}}><i className="far fa-heart"></i></button>
+					</div>
+				  </div>
+			)
+		})}
+      </div>
+    </>
+	
+  );
+};
